@@ -1,30 +1,101 @@
+# Setting working directory
+setwd("path/to/working/directory")
+
+# Loading required libraries
 library(readr)
 library(tidyverse)
 library(skimr)
-setwd("/Applications/Resit Programming with R")
-sewerdata <- read.csv2('COVID-19_SewerWaterData_MunicipalitiesWeek.csv')
-municipalities2022 <- read.csv2('Municipalities alphabetically 2022.csv')
+library(dplyr)
+
+# Loading data files 
+sewerdata <- read.csv2('Datafiles/COVID-19_SewerWaterData_MunicipalitiesWeek.csv')
+municipalities <- read.csv2('Datafiles/municipalities_alphabetically_2022.csv')
+population_density <- read.csv2('Datafiles/Regionale_kerncijfers_Nederland_23012024_192144.csv')
+
+# Adjusting column names
+names(sewerdata)[8:9] <- c("MunicipalName","RNA_flow")
+names(municipalities)[1] <- "MunicipalCode"
+colnames(population_density) <- c("Year", "MunicipalName", "Population", "PopulationDensity")
+
+# #################### Clearing and adjusting dataframes
+
+# Exploring dataframe columns
+glimpse(sewerdata)
+glimpse(municipalities)
+glimpse(population_density)
+
+# Exploring unique and missing data for loaded dataframes
+data.frame(unique=sapply(sewerdata, function(x) sum(length(unique(x, na.rm = TRUE)))), 
+           missing=sapply(sewerdata, function(x) sum(is.na(x) | x == 0)))
+data.frame(unique=sapply(municipalities, function(x) sum(length(unique(x, na.rm = TRUE)))), 
+           missing=sapply(municipalities, function(x) sum(is.na(x) | x == 0)))
+data.frame(unique=sapply(population_density, function(x) sum(length(unique(x, na.rm = TRUE)))), 
+           missing=sapply(population_density, function(x) sum(is.na(x) | x == 0)))
+
+# Removing unused columns
+sewerdata <- sewerdata[-c(1,2)]
+
+# Removing missing observations
+sewerdata <- sewerdata %>% drop_na(RNA_flow)
+population_density <- population_density %>% drop_na(Population)
+
+# Normalizing RNA flow to hundreds of billions for clarity
+sewerdata$RNA_flow <- round(sewerdata$RNA_flow / 100000000000, digits = 3)
+
+# Joining provincial names to sewer dataframe
+municipalities <- subset(municipalities, 
+                    select = c(MunicipalName, ProvincialName))
+sewerdata <- inner_join(sewerdata, municipalities, by = "MunicipalName", na_matches = "na")
+
+# Joining provincial names to population dataframe
+population_density <- inner_join(population_density, municipalities, by = "MunicipalName", na_matches = "na")
+
+# Ordering data frame by year and then by municipal name
+population_density <- population_density[with(population_density, order(Year, MunicipalName)), ]
+
+# #################### Exploration of summary statistics
+
+# Exploring summary statistics for sewer data
+sewer_summary <- sewerdata %>%
+  group_by(MunicipalName, Year) %>%
+  summarise(
+    count = n(),                    # Count of observations
+    mean_RNA = mean(RNA_flow),      # Average of RNA flow for the municipality
+    median_RNA = median(RNA_flow),  # Median of RNA flow for the municipality
+    sd_RNA = sd(RNA_flow)) %>%      # Standard deviation of RNA flow for the municipality
+  arrange(desc(count))              # most observations per municipality at the top
+
+sewer_summary
+
+population_summary <- population_density %>%
+  group_by(ProvincialName, Year) %>%
+  summarise(
+    count = n(),                                # Count of observations
+    mean_desity = mean(PopulationDensity),      # Average density for province/year
+    median_desity = median(PopulationDensity),  # Median density for province/year
+    sd_desity = sd(PopulationDensity)) %>%      # Standard deviation density for province/year
+  arrange(desc(count))                          # most observations per municipality at the top
+
+population_summary
+
+#################### OLD SCRIPT ###################################
+
+
 
 sewerdata_2 <- sewerdata %>% 
   group_by(Region_name, Year) %>% 
-  summarise(Avg = mean(RNA_flow_per_100000_weeklymean)) %>% 
+  summarise(Avg = mean(RNA_flow)) %>% 
   arrange(-Avg)
 
-population_density <- read.csv2('Regionale_kerncijfers_Nederland_23012024_192144.csv')
+
 
 glimpse(population_density)
 
-names(population_density)[names(population_density) == "Regio.s"] <- "Region_name"
-names(population_density)[names(population_density) == "Bevolking.Bevolkingssamenstelling.op.1.januari.Totale.bevolking..aantal."] <- "Population"
-names(population_density)[names(population_density) == "Bevolking.Bevolkingssamenstelling.op.1.januari.Bevolkingsdichtheid..aantal.inwoners.per.km.."] <- "Population_Density"
-names(population_density)[names(population_density) == "Perioden"] <- "Year"
 
 population_density %>% 
-  select(Region_name, Population, 
+  select(Region_name, Population, joined_data <- inner_join(sewerdata_2, population_density, by = c("Region_name", "Year")))
 
-joined_data <- inner_join(sewerdata_2, population_density, by = c("Region_name", "Year"))
-
-df1 <- municipalities2022 %>% rename(Region_name = MunicipalName)
+df1 <- municipalities %>% rename(Region_name = MunicipalName)
 sewer_mu <- merge(sewerdata, df1, by = "Region_name")
 sewer_mu
 glimpse(sewer_mu)
@@ -54,8 +125,8 @@ ggplot(sewer_mu, aes(x= Week, y = RNA_flow_per_100000_weeklymean)) +
   geom_col() + labs(x = "Start_date", y = "RNA_flow_per_100000_weeklymean", title = "Start Date RNA" )
 
 ggplot(data = agg_data, aes(x= Year, y = total_RNA))
-  +geom_bar()
-  +facet_grid(ProvincialName~.)
++geom_bar()
++facet_grid(ProvincialName~.)
 
 ggplot(data = agg_data, aes(x= ProvincialName, y = total_RNA)) + geom_col() +labs(x = "ProvincialName", y = "total_RNA", title = "RNA Value per Province")+
   theme(axis.text.x = element_text(angle = 60, hjust =1))+
@@ -69,7 +140,7 @@ ggplot(agg_data, aes(x = ProvincialName, y = total_RNA, fill = ProvincialName)) 
        x = "ProvincialName",
        y = "total_RNA") +
   theme_minimal()
-  
+
 #Adding year to the dataframe agg_data
 agg_data <- sewer_mu %>%
   group_by(ProvincialName, Year) %>%
@@ -110,3 +181,4 @@ ggplot(max_rna_per_year, aes(x = Year, y = Week, size = RNA_flow_per_100000_week
   theme_minimal()
 
 sewer_mu %>% arrange(Start_date)
+         
