@@ -14,7 +14,6 @@ population_density <- read.csv2('Datafiles/Regionale_kerncijfers_Nederland_23012
 
 # Adjusting column names
 names(sewerdata)[8:9] <- c("MunicipalName","RNA_flow")
-names(municipalities)[1] <- "MunicipalCode"
 colnames(population_density) <- c("Year", "MunicipalName", "Population", "PopulationDensity")
 
 # #################### Clearing and adjusting dataframes
