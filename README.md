@@ -110,11 +110,11 @@ Population          1388    1514
 PopulationDensity    889    1514
 ```
 
-Respectively, there are 1514 values of **Population** and **PopulationDensity** values which subject for removal.
+Respectively, there are 1514 missing values of **Population** and **PopulationDensity** so these observations are subject for removal.
 
 For convenience, information of province name is joined for both sewer and population datasets. 
 
-In addition it worth to normalize **RNA_flow** feature values in for intepretation and visual clarity. Thus, all values **RNA_flow** feature of sewer dataset are devided by 100,000,000,000 and now are expressed in hundreds of billions.
+In addition it worth to normalize **RNA_flow** feature values in for intepretation and visual clarity. Thus, all values **RNA_flow** feature of sewer dataset are divided by 100,000,000,000 and further expressed in hundreds of billions.
 
 Finally, the structure of sewer and population datasets looks as follows:
 
