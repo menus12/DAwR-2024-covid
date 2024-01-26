@@ -114,7 +114,7 @@ Respectively, there are 1514 missing values of **Population** and **PopulationDe
 
 For convenience, information of province name is joined for both sewer and population datasets. 
 
-In addition it worth to normalize **RNA_flow** feature values in for intepretation and visual clarity. Thus, all values **RNA_flow** feature of sewer dataset are divided by 100,000,000,000 and further expressed in hundreds of billions.
+In addition it worth to normalize **RNA_flow** feature values in for intepretation and visual clarity. Thus, all values **RNA_flow** feature of sewer dataset are divided by 100,000 to have a weekly mean per habitant and then divided by 1,000,000 and further expressed in millions.
 
 Finally, the structure of sewer and population datasets looks as follows:
 
@@ -199,7 +199,24 @@ Even the that plot gives an impression of high positive correlation, we would li
 # i 326 more rows
 ```
 
+Here we can spot some outliers that are municipalities which have low mean population but however have the highest numbers of mean RNA flow amounts.
+
+Nevertheless, on the plot below we can see a relatively positive correlation even with less inclined slope.
+
 ![Scatterplot mean RNA and density for municipalities](./images/03-q1-scatterplot.png)
+
+Next we will build regression table, based on last aggregate dataframe.
+
+```R
+term        estimate std_error statistic p_value lower_ci upper_ci
+  <chr>          <dbl>     <dbl>     <dbl>   <dbl>    <dbl>    <dbl>
+1 intercept    685.        9.76      70.3        0  666.     705.   
+2 mean_desity    0.041     0.007      5.59       0    0.027    0.056
+```
+
+Table suggests that for each increase in mean population for municipality, weekly mean of RNA flow amount will be increasing by ~4 billion particles.
+
+To answer a formal question we also can build a null distibution and see how our actual observations fit into the Null Hypothesis:
 
 ### Relation of RNA flow amount dynamics during public hoolidays 
 
