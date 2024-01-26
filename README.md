@@ -9,6 +9,20 @@
 ## Introduction
 <!-- An introductory chapter in which the purpose and design of the (sub)study is explained and in which the research questions are described -->
 
+Current research is targeted to explore and analyze statistics data of the ‘Covid-19 National SARS-CoV-2 Wastewater Surveillance’ program carried from September 2020 until December 2023 in order to get insights on how public health in the Netherlands can be improved in relation to Covid-19.
+
+The data analysis in this study will be done through the testing of two hypotheses:
+
+1. Amount of measured SARS-CoV-2 RNA particles is greater in lands with higher population density
+
+    - null hypothesis: weekly mean of RNA flow has no correlation with population density
+    - alternative hypothesis: weekly mean of RNA flow has positive correlation with population density
+
+2. Amount of measured SARS-CoV-2 RNA particles is increasing after public holidays
+
+    - null hypothesis: weekly mean of RNA flow is not increasing after public holidays
+    - alternative hypothesis: weekly mean of RNA flow is not increasing after public holidays
+
 ## Operationalization of the research questions
 <!-- Describe the data that will be used and how the questions will be answered on the basis of this data. The data analysis itself is not yet described here. So do tell ‘Data file [X] comes from [Y] and can answer the posed questions because [Z]’, but do not yet describe the data itself -->
 
@@ -130,6 +144,8 @@ $ Population        <int> 155111, 25445, 31859, 27121, 27843, 20165, 25590, 1094
 $ PopulationDensity <int> 1410, 92, 1584, 281, 272, 2297, 1180, 991, 1087, 1640, 110, 886, 279~
 $ ProvincialName    <chr> "Noord-Brabant", "Drenthe", "Noord-Holland", "Gelderland", "FryslÃ¢n~
 ```
+
+Detalied steps for data preparation and clearing are in project script.
 
 ### Data summary statistics
 
