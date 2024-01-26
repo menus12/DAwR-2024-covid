@@ -220,7 +220,7 @@ Then we make a null distibution to see how current observations fit into the Nul
 
 ![Simulation-based null distribution](./images/04-null-dist.png)
 
-In this plot, vertical line is at point of 0.2926175 which is roughly = 29.26%, which is the probability of obtaining a test statistic just as or more extreme than the observed test statistic assuming the null hypothesis H0 is true.
+In this plot, vertical line represent roughly 29.26% of observed correlation assuming the null hypothesis H0 is true.
 
 In other words, we see that the value of the correlation between the mean RNA flow amount and the mean density of municipalities, which we obtained, does not fit the hypothetical null distribution, where the mean RNA flow amount does not correlate with the mean population density in municipalities. Therefore, we are inclined to reject H0 and accept the alternative hypotesis the mean population density indeed have a positive correlation with mean RNA flow amount according to Wastewater Surveillance program.
 
