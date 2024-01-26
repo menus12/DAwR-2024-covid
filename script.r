@@ -40,8 +40,10 @@ sewerdata <- sewerdata[-c(1,2)]
 sewerdata <- sewerdata %>% drop_na(RNA_flow)
 population_density <- population_density %>% drop_na(Population)
 
-# Normalizing RNA flow to hundreds of billions for clarity
-sewerdata$RNA_flow <- round(sewerdata$RNA_flow / 100000000000, digits = 3)
+# Dividing RNA flow amount by 100,000 to receive weekly avg for one person
+sewerdata$RNA_flow <- round(sewerdata$RNA_flow / 100000, digits = 3)
+# Normalizing RNA flow to millions for clarity
+sewerdata$RNA_flow <- round(sewerdata$RNA_flow / 1000000, digits = 3)
 
 # Joining provincial names to sewer dataframe
 municipalities <- subset(municipalities, 
@@ -88,7 +90,7 @@ aggr_rna_density <- inner_join(rna_per_province, density_per_province, by = "Pro
 aggr_rna_density %>% ggplot(aes(x = mean_desity, y = mean_RNA)) +
   geom_jitter(alpha = 0.5) +
   labs(x = "Mean province density", 
-       y = "Mean RNA particles (hundreds of billions)",
+       y = "Mean RNA particles per habitant (millions)",
        title = "Relationship between RNA particles measurments and province population density") + 
   geom_smooth(method = "lm", se = FALSE)
 
@@ -113,7 +115,7 @@ aggr_rna_density_mun <- inner_join(rna_per_municipality, density_per_municipalit
 aggr_rna_density_mun %>% ggplot(aes(x = mean_desity, y = mean_RNA)) +
   geom_jitter(alpha = 0.5) +
   labs(x = "Mean municipality density", 
-       y = "Mean RNA particles (hundreds of billions)",
+       y = "Mean RNA particles per habitant (millions)",
        title = "Relationship between RNA particles measurments and municipality population density") + 
   geom_smooth(method = "lm", se = FALSE)
 
