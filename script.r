@@ -6,6 +6,8 @@ library(readr)
 library(tidyverse)
 library(skimr)
 library(dplyr)
+library(moderndive)
+library(infer)
 
 # Loading data files 
 sewerdata <- read.csv2('Datafiles/COVID-19_SewerWaterData_MunicipalitiesWeek.csv')
@@ -68,7 +70,7 @@ mun_per_province
 # Mean RNA value per province
 rna_per_province <- sewerdata %>%
   group_by(ProvincialName) %>%
-  summarise(mean_RNA = mean(RNA_flow, na.rm = TRUE)) %>%
+  summarise(mean_RNA = mean(RNA_flow)) %>%
   arrange(desc(mean_RNA))
 rna_per_province
 
@@ -79,17 +81,79 @@ density_per_province <- population_density %>%
     mean_desity = mean(PopulationDensity)) %>%
   arrange(desc(mean_desity))
 
-# Joining two dataframes
+# Joining mean aggregates
 aggr_rna_density <- inner_join(rna_per_province, density_per_province, by = "ProvincialName", na_matches = "na")
 
-# Plotting the linear regression between participation count and mean average score 
+# Plotting the linear regression between mean province density and mean RNA measurement
 aggr_rna_density %>% ggplot(aes(x = mean_desity, y = mean_RNA)) +
   geom_jitter(alpha = 0.5) +
-  labs(x = "Mean density", 
+  labs(x = "Mean province density", 
        y = "Mean RNA particles (hundreds of billions)",
-       title = "Scatterplot of relationship between RNA particles measurments and population density") + 
+       title = "Relationship between RNA particles measurments and province population density") + 
   geom_smooth(method = "lm", se = FALSE)
 
+# Mean RNA value per municipality
+rna_per_municipality <- sewerdata %>%
+  group_by(MunicipalName) %>%
+  summarise(mean_RNA = mean(RNA_flow)) %>%
+  arrange(desc(mean_RNA))
+rna_per_municipality
+
+# Mean density per municipality
+density_per_municipality <- population_density %>%
+  group_by(MunicipalName) %>%
+  summarise(
+    mean_desity = mean(PopulationDensity)) %>%
+  arrange(desc(mean_desity))
+
+# Joining mean aggregates
+aggr_rna_density_mun <- inner_join(rna_per_municipality, density_per_municipality, by = "MunicipalName", na_matches = "na")
+
+# Plotting the linear regression between mean municipality density and mean RNA measurement
+aggr_rna_density_mun %>% ggplot(aes(x = mean_desity, y = mean_RNA)) +
+  geom_jitter(alpha = 0.5) +
+  labs(x = "Mean municipality density", 
+       y = "Mean RNA particles (hundreds of billions)",
+       title = "Relationship between RNA particles measurments and municipality population density") + 
+  geom_smooth(method = "lm", se = FALSE)
+
+# Fit regression model
+model_01 <- lm(mean_RNA ~ mean_desity, data = aggr_rna_density_mun)
+
+# Get regression table
+get_regression_table(model_01)
+
+# Making null distribution
+null_dist_01 <- aggr_rna_density_mun %>% 
+  specify(formula = mean_RNA ~ mean_desity) %>% 
+  hypothesize(null = "independence") %>% 
+  generate(reps = 1000, type = "permute") %>% 
+  calculate(stat = "correlation")
+
+# Observation difference proportion
+obp_01  <- aggr_rna_density_mun %>% 
+  specify(formula = mean_RNA ~ mean_desity) %>%
+  calculate(stat = "correlation")
+
+# Visualizing null distribution
+visualize(null_dist_01, bins = 20) + 
+  shade_p_value(obs_stat = obp_01, direction = "both")
+
+# Making a yearly slice of sewer data observations for each municipality
+yearly_slice <- sewerdata %>% 
+  filter(Week == 37) %>% 
+  inner_join(population_density %>% subset(select = c("MunicipalName","Year","PopulationDensity")))
+
+# Plotting the facceted linear regression between municipal density and RNA measurements
+yearly_slice %>% ggplot(aes(x = PopulationDensity, y = RNA_flow)) +
+  geom_jitter(alpha = 0.5) +
+  labs(x = "Density", 
+       y = "RNA particles (hundreds of billions)",
+       title = "Relationship between RNA particles measurments and population density") + 
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(vars(Year), nrow = 4)
+
+##########################################
 
 
 # Exploring summary statistics for sewer data
