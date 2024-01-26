@@ -15,6 +15,125 @@
 ## Description of the data used
 <!-- Which data/variables were recorded/used for the study, something about any missing values, a graphical representation and summary statistics. Please note that this is about providing insight into the data used, not yet about (the method used for) answering the research questions -->
 
+### Data sources
+
+Data provided as three csv files:
+
+- COVID-19_SewerWaterData_MunicipalitiesWeek.csv with 59,479 observations.
+- municipalities_alphabetically_2022.csv with 345 observations.
+- Regionale_kerncijfers_Nederland_23012024_192144.csv with 2,908 observations
+
+Below are descriptions of fields for each data file and indication of the new name (if applicable):
+
+#### Sewer water data
+
+This file contains the average number of SARS-CoV-2 virus particles per 100,000 inhabitants per municipality, per week, as calculated from measurements of the number of virus particles per sewage treatment plant (WWTP).
+
+|Original name|New name|Comment|
+|---|---|---|
+|Version|-|Version number of the dataset|
+|Date_of_report|-|Date on which the file was created|
+|Year|-|Year of observation|
+|Week|-|Week of the year|
+|Start_date|-|Start date of the week|
+|End_date|-|End date of the week|
+|Region_code|MunicipalityCode|Code of the municipality|
+|Region_name|MunicipalityName|Name of the municipality|
+|RNA_flow_per_100000_weeklymean|RNA_flow|Number of SARS-CoV-2 RNA particles measured in the sewage, based on a weighted average per 100,000 inhabitants|
+
+#### Municipalities
+
+This file contains information about each municipality's assignment to a province.
+
+|Original name|New name|Comment|
+|---|---|---|
+|MunicipalCode|-|Code of the municipality|
+|MunicipalCodeGM|-|Gemeente code|
+|MunicipalName|-|Name of the municipality|
+|ProvincialCode|-|Code of the province|
+|ProvincialCodePV|-|Province Administrative classification|
+|ProvincialName|-|Name of the province|
+
+#### Population density
+
+This file contains population and population density information for each municipality from 2020 to 2023.
+
+|Original name|New name|Comment|
+|---|---|---|
+|Perioden|Year|Year of observation|
+|Regio's|MunicipalName|Name of the municipality|
+|Bevolking/Bevolkingssamenstelling op 1 januari/Totale bevolking (ntal)|Population|Total number of inhabitants on Jan. 1|
+|Bevolking/Bevolkingssamenstelling op 1 januari/Bevolkingsdichtheid (aantal inwoners per km²)|PopulationDensity|Density of inhabitants per km²|
+
+#### Cleaning and combining datasets
+
+Before we proceed to further data manipulation it worth to remove any incomplete observations from sewer and population datasets so these missing values won't have impact on statistics.
+
+**Sewer dataframe unique and missing values**
+
+```R
+               unique missing
+Version             1       0
+Date_of_report      1       0
+Year                4       0
+Week               53       0
+Start_date        172       0
+End_date          172       0
+Region_code       356       0
+MunicipalName     356       0
+RNA_flow        51600     918
+```
+
+There are 918 missing values of **RNA_flow** feature so these observations are removed from dataset.
+
+**Population dataframe unique and missing values**
+
+```R
+                  unique missing
+Year                   4       0
+MunicipalName        727       0
+Population          1388    1514
+PopulationDensity    889    1514
+```
+
+Respectively, there are 1514 values of **Population** and **PopulationDensity** values which subject for removal.
+
+For convenience, information of province name is joined for both sewer and population datasets. 
+
+In addition it worth to normalize **RNA_flow** feature values in for intepretation and visual clarity. Thus, all values **RNA_flow** feature of sewer dataset are devided by 100,000,000,000 and now are expressed in hundreds of billions.
+
+Finally, the structure of sewer and population datasets looks as follows:
+
+**Sewer dataframe**
+
+```R
+Rows: 58,094
+Columns: 8
+$ Year           <int> 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020,~
+$ Week           <int> 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,~
+$ Start_date     <chr> "7-9-2020", "7-9-2020", "7-9-2020", "7-9-2020", "7-9-2020", "7-9-2020",~
+$ End_date       <chr> "13-9-2020", "13-9-2020", "13-9-2020", "13-9-2020", "13-9-2020", "13-9-~
+$ Region_code    <chr> "GM0518", "GM0796", "GM1680", "GM0358", "GM0197", "GM0059", "GM0482", "~
+$ MunicipalName  <chr> "'s-Gravenhage", "'s-Hertogenbosch", "Aa en Hunze", "Aalsmeer", "Aalten~
+$ RNA_flow       <dbl> 166.932, 59.388, 7.452, 139.167, 19.150, 3.202, 50.272, 150.267, 26.486~
+$ ProvincialName <chr> "Zuid-Holland", "Noord-Brabant", "Drenthe", "Noord-Holland", "Gelderlan~
+```
+
+**Population dataframe**
+
+```R
+Rows: 1,333
+Columns: 5
+$ Year              <int> 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 20~
+$ MunicipalName     <chr> "'s-Hertogenbosch", "Aa en Hunze", "Aalsmeer", "Aalten", "Achtkarspe~
+$ Population        <int> 155111, 25445, 31859, 27121, 27843, 20165, 25590, 109436, 73107, 211~
+$ PopulationDensity <int> 1410, 92, 1584, 281, 272, 2297, 1180, 991, 1087, 1640, 110, 886, 279~
+$ ProvincialName    <chr> "Noord-Brabant", "Drenthe", "Noord-Holland", "Gelderland", "FryslÃ¢n~
+```
+
+### Data summary statistics
+
+
 ## Results of the data analysis
 <!-- Results of the data analysis: The actual answer of the research questions based on data analysis, the use of specific graphs to gain insight into the answers to the questions and the results of the hypothesis testing -->
 
