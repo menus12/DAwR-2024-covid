@@ -54,26 +54,96 @@ population_density <- population_density[with(population_density, order(Year, Mu
 
 # #################### Exploration of summary statistics
 
+# Understanding number of municipalities number in each province
+mun_per_province <- municipalities %>% 
+  group_by(ProvincialName) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(count)) 
+mun_per_province
+
+# TODO
+
+# #################### Results of the data analysis
+
+# Mean RNA value per province
+rna_per_province <- sewerdata %>%
+  group_by(ProvincialName) %>%
+  summarise(mean_RNA = mean(RNA_flow, na.rm = TRUE)) %>%
+  arrange(desc(mean_RNA))
+rna_per_province
+
+# Mean density per province
+density_per_province <- population_density %>%
+  group_by(ProvincialName) %>%
+  summarise(
+    mean_desity = mean(PopulationDensity)) %>%
+  arrange(desc(mean_desity))
+
+# Joining two dataframes
+aggr_rna_density <- inner_join(rna_per_province, density_per_province, by = "ProvincialName", na_matches = "na")
+
+# Plotting the linear regression between participation count and mean average score 
+aggr_rna_density %>% ggplot(aes(x = mean_desity, y = mean_RNA)) +
+  geom_jitter(alpha = 0.5) +
+  labs(x = "Mean density", 
+       y = "Mean RNA particles (hundreds of billions)",
+       title = "Scatterplot of relationship between RNA particles measurments and population density") + 
+  geom_smooth(method = "lm", se = FALSE)
+
+
+
 # Exploring summary statistics for sewer data
 sewer_summary <- sewerdata %>%
-  group_by(MunicipalName, Year) %>%
+  group_by(ProvincialName) %>%
   summarise(
     count = n(),                    # Count of observations
-    mean_RNA = mean(RNA_flow),      # Average of RNA flow for the municipality
-    median_RNA = median(RNA_flow),  # Median of RNA flow for the municipality
-    sd_RNA = sd(RNA_flow)) %>%      # Standard deviation of RNA flow for the municipality
-  arrange(desc(count))              # most observations per municipality at the top
+    mean_RNA = mean(RNA_flow),      # Average of RNA flow for the province/year
+    median_RNA = median(RNA_flow),  # Median of RNA flow for the province/year
+    sd_RNA = sd(RNA_flow)) %>%      # Standard deviation of RNA flow for the province/year
+  arrange(desc(mean_RNA))           # highest mean per province at the top
 
 sewer_summary
+
+
+## Plotting the cumulative RNA flow across within each province over 4 years 
+
+ggplot(sewerdata %>% filter(Year == 2021, Week == 1) , aes(x = as.factor(ProvincialName), y = RNA_flow)) +
+  geom_boxplot() +
+  labs(title = "RNA flow, week 1 2021",
+       x = "Province",
+       y = "RNA flow (hundreds of billions)") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(population_density %>% filter(Year == 2021) , aes(x = as.factor(ProvincialName), y = PopulationDensity)) +
+  geom_boxplot() +
+  labs(title = "Population Density 2021",
+       x = "Province",
+       y = "Density of habitants") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(sewerdata %>% filter(Year == 2022, Week == 1) , aes(x = as.factor(ProvincialName), y = RNA_flow)) +
+  geom_boxplot() +
+  labs(title = "RNA flow, week 37 2021",
+       x = "Province",
+       y = "RNA flow (hundreds of billions)") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(sewerdata %>% filter(Year == 2023, Week == 1) , aes(x = as.factor(ProvincialName), y = RNA_flow)) +
+  geom_boxplot() +
+  labs(title = "RNA flow, week 37 2022",
+       x = "Province",
+       y = "RNA flow (hundreds of billions)") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
 
 population_summary <- population_density %>%
   group_by(ProvincialName, Year) %>%
   summarise(
-    count = n(),                                # Count of observations
+    population = sum(Population),  # Median density for province/year
     mean_desity = mean(PopulationDensity),      # Average density for province/year
-    median_desity = median(PopulationDensity),  # Median density for province/year
-    sd_desity = sd(PopulationDensity)) %>%      # Standard deviation density for province/year
-  arrange(desc(count))                          # most observations per municipality at the top
+    sd_desity = sd(Population)) %>%      # Standard deviation density for province/year
+  arrange(Year)                          # most observations per municipality at the top
 
 population_summary
 
