@@ -149,9 +149,59 @@ Detalied steps for data preparation and clearing are in project script.
 
 ### Data summary statistics
 
+TODO
 
 ## Results of the data analysis
 <!-- Results of the data analysis: The actual answer of the research questions based on data analysis, the use of specific graphs to gain insight into the answers to the questions and the results of the hypothesis testing -->
+
+### Relation of population density and RNA flow amount
+
+First we will group sewer data and population data by each province following by calculationof mean average for RNA flow amounts:
+
+```R
+   ProvincialName mean_RNA mean_desity
+   <chr>             <dbl>       <dbl>
+ 1 Noord-Holland      802.       1379.
+ 2 Zuid-Holland       786.       1965.
+ 3 Flevoland          778.        664.
+ 4 Utrecht            755.        881.
+ 5 FryslÃ¢n           734.        209.
+ 6 Zeeland            733.        289.
+ 7 Limburg            711.        690.
+ 8 Gelderland         692.        595.
+ 9 Overijssel         686.        440.
+10 Noord-Brabant      683.        595.
+11 Drenthe            599.        267.
+12 Groningen          565.        202
+```
+
+Even relationship between these numbers seems legit, there are couple of provinces with relatively low mean density and high mean amount on RNA flow amount at the same time.
+
+Next, we will make a simple scatterplot to get a better understanding of whether there is a any correlation between mean RNA and mean population density in provinces.
+
+![Scatterplot mean RNA and density for provinces](./images/02-q1-scatterplot.png)
+
+Even the that plot gives an impression of high positive correlation, we would like to zoom in at the municipal level for both mean RNA amount and mean population density.
+
+```R
+   MunicipalName   mean_RNA mean_desity
+   <chr>              <dbl>       <dbl>
+ 1 Ameland            1567.        65  
+ 2 Vlieland           1323.        30.2
+ 3 Schiermonnikoog    1305.        22.8
+ 4 Terschelling       1227.        57  
+ 5 Diemen             1097.      2646. 
+ 6 Amsterdam          1071.      5192. 
+ 7 Ouder-Amstel       1031.       590. 
+ 8 Ommen              1029.       102. 
+ 9 Bergen (NH.)        998.       302. 
+10 Dijk en Waard       986.      1428. 
+# i 326 more rows
+```
+
+![Scatterplot mean RNA and density for municipalities](./images/03-q1-scatterplot.png)
+
+### Relation of RNA flow amount dynamics during public hoolidays 
 
 ## Conclusions and recommendations
 <!-- including recommendations for further research -->
