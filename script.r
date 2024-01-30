@@ -8,15 +8,18 @@ library(skimr)
 library(dplyr)
 library(moderndive)
 library(infer)
+library(lubridate)
 
 # Loading data files 
 sewerdata <- read.csv2('Datafiles/COVID-19_SewerWaterData_MunicipalitiesWeek.csv')
 municipalities <- read.csv2('Datafiles/municipalities_alphabetically_2022.csv')
 population_density <- read.csv2('Datafiles/Regionale_kerncijfers_Nederland_23012024_192144.csv')
+public_holidays <- read.csv2('Datafiles/public_holidays.csv')
 
 # Adjusting column names
 names(sewerdata)[8:9] <- c("MunicipalName","RNA_flow")
 colnames(population_density) <- c("Year", "MunicipalName", "Population", "PopulationDensity")
+names(public_holidays)[1] <- "PublicHoliday"
 
 # #################### Clearing and adjusting dataframes
 
@@ -68,6 +71,8 @@ mun_per_province
 # TODO
 
 # #################### Results of the data analysis
+
+###################### Question 1
 
 # Mean RNA value per province
 rna_per_province <- sewerdata %>%
@@ -154,6 +159,30 @@ yearly_slice %>% ggplot(aes(x = PopulationDensity, y = RNA_flow)) +
        title = "Relationship between RNA particles measurments and population density") + 
   geom_smooth(method = "lm", se = FALSE) +
   facet_wrap(vars(Year), nrow = 4)
+
+###################### Question 2
+
+# Adding week number and year to each public holiday
+public_holidays$Week <- lubridate::week(dmy(public_holidays$Date))
+public_holidays$Year <- lubridate::year(dmy(public_holidays$Date))
+
+# Making a distinct list of wekk-year pairs
+public_holidays_distinct <- distinct(public_holidays, Week, Year, .keep_all = TRUE)
+public_holidays_distinct$Date <- NULL
+
+
+# Order sewer data by municipality, year and week
+sewer_ordered <- sewerdata[with(sewerdata, order(MunicipalName, Year, Week)), ]
+
+# Marking each week whether there was a holiday
+sewer_ordered <- left_join(sewer_ordered, public_holidays_distinct, by = c("Year", "Week"), na_matches = "na")
+sewer_ordered$HolidayWeek <- with(sewer_ordered, ifelse(!is.na(PublicHoliday), TRUE, FALSE))
+
+# Marking whether RNA flow was increased comparing to previous week
+sewer_ordered$increase <- with(sewer_ordered, 
+                               ifelse(MunicipalName == lag(MunicipalName), 
+                                      ifelse(RNA_flow > lag(RNA_flow), TRUE, FALSE), NA))
+
 
 ##########################################
 
