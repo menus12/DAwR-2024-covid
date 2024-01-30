@@ -166,22 +166,88 @@ yearly_slice %>% ggplot(aes(x = PopulationDensity, y = RNA_flow)) +
 public_holidays$Week <- lubridate::week(dmy(public_holidays$Date))
 public_holidays$Year <- lubridate::year(dmy(public_holidays$Date))
 
-# Making a distinct list of wekk-year pairs
+# Making a distinct list of week-year pairs
 public_holidays_distinct <- distinct(public_holidays, Week, Year, .keep_all = TRUE)
 public_holidays_distinct$Date <- NULL
+
+# Exploring holidays distribution over the weeks
+public_holidays %>% ggplot(aes(x = Week, y = Year)) +
+  geom_jitter(alpha = 0.5)
+
+# Clustering spring holidays
+Q <- quantile(public_holidays$Week, probs=c(.25, .75), na.rm = FALSE)
+iqr <- IQR(public_holidays$Week)
+spring_holidays <- subset(public_holidays, public_holidays$Week > (Q[1] - 1.5*iqr) & public_holidays$Week < (Q[2]+1.5*iqr))
 
 
 # Order sewer data by municipality, year and week
 sewer_ordered <- sewerdata[with(sewerdata, order(MunicipalName, Year, Week)), ]
 
-# Marking each week whether there was a holiday
-sewer_ordered <- left_join(sewer_ordered, public_holidays_distinct, by = c("Year", "Week"), na_matches = "na")
-sewer_ordered$HolidayWeek <- with(sewer_ordered, ifelse(!is.na(PublicHoliday), TRUE, FALSE))
+# Calculating the RNA flow delta between weeks
+sewer_ordered$delta <- with(sewer_ordered,
+                            ifelse(MunicipalName == lag(MunicipalName), 
+                                   RNA_flow - lag(RNA_flow), NA))
 
-# Marking whether RNA flow was increased comparing to previous week
-sewer_ordered$increase <- with(sewer_ordered, 
-                               ifelse(MunicipalName == lag(MunicipalName), 
-                                      ifelse(RNA_flow > lag(RNA_flow), TRUE, FALSE), NA))
+# Grouping sewer RNA flow by weeks and summing up deltas across all municipalities
+weekly_group <- sewer_ordered %>% filter(Year > 2020) %>% 
+  group_by(Week) %>%
+  summarise(obs = n(),
+            mean_RNA = mean(RNA_flow), 
+            max_RNA = max(RNA_flow),
+            min_RNA = min(RNA_flow),
+            sum_delta = sum(delta)) %>%
+  arrange(desc(mean_RNA))
+
+# Plotting delta sum of RNA flow throughout the weeks 
+weekly_group %>% ggplot(aes(x = Week, y = sum_delta)) +
+  geom_jitter(alpha = 0.5) +
+  labs(x = "Week number", 
+       y = "Mean RNA flow",
+       title = "Relation of delta RNA flow sum to weeks during the year") +
+  geom_vline(data = spring_holidays, aes(xintercept = Week), linetype="dotted", color = "blue") +
+  geom_smooth(method = "lm", se = FALSE)
+
+# Sub-setting a spring slice of and summing up deltas across all municipalities
+spring_slice <- sewer_ordered %>% subset(Week %in% spring_holidays$Week) %>%
+  group_by(Week) %>%
+  summarise(obs = n(),
+            mean_RNA = mean(RNA_flow), 
+            max_RNA = max(RNA_flow),
+            min_RNA = min(RNA_flow),
+            sum_delta = sum(delta)) %>%
+  arrange(desc(mean_RNA))
+
+# Plotting delta sum of RNA flow throughout the spring slice 
+spring_slice %>% ggplot(aes(x = Week, y = sum_delta)) +
+  geom_jitter(alpha = 0.5) +
+  labs(x = "Week number", 
+       y = "Mean RNA flow",
+       title = "Relation of delta RNA flow sum to weeks during the year") +
+  geom_smooth(method = "lm", se = FALSE)
+
+
+# Fit regression model
+model_02 <- lm(sum_delta ~ Week, data = spring_slice)
+
+# Get regression table
+get_regression_table(model_02)
+
+# Making null distribution
+null_dist_02 <- spring_slice %>% 
+  specify(formula = sum_delta ~ Week) %>% 
+  hypothesize(null = "independence") %>% 
+  generate(reps = 1000, type = "permute") %>% 
+  calculate(stat = "correlation")
+
+
+# Observation difference proportion
+obp_02  <- spring_slice %>% 
+  specify(formula = sum_delta ~ Week) %>%
+  calculate(stat = "correlation")
+
+# Visualizing null distribution
+visualize(null_dist_02, bins = 20) + 
+  shade_p_value(obs_stat = obp_02, direction = "both")
 
 
 ##########################################
