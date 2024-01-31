@@ -5,6 +5,7 @@ An analysis of National SARS-CoV-2 Wastewater Surveillance data
 
 By Itzel Ruiz
 
+
 A Research Paper
 Submitted to the lecturer of the subject ‘Programming with R’
 The Hague University of Applied Sciences PRO
@@ -37,6 +38,46 @@ The data analysis in this study will be done through the testing of two hypothes
 ## Operationalization of the research questions
 <!-- Describe the data that will be used and how the questions will be answered on the basis of this data. The data analysis itself is not yet described here. So do tell ‘Data file [X] comes from [Y] and can answer the posed questions because [Z]’, but do not yet describe the data itself -->
 
+Current research is mainly based on data from The National Institute for Public Health and the Environment (RIVM) which is committed to a healthy population and a sustainable, safe and healthy living environment. 
+
+Source of main dataset is RIVM internet portal (https://data.rivm.nl/covid-19/). Additional dataset with total population and population density for each municipality was taken from open source database of Statistics Netherlands (CBS)  (https://opendata.cbs.nl/#/CBS/nl/dataset/70072ned/table) which provides relevant and independent figures on a wide range of societal issues. 
+
+To operationalize the data in order to formulated research questions are answered the following steps are necessary:
+
+- Import and preparation of data
+
+- Initial exploratory analysis of prepared data
+
+- Provide linear regression models and null hypotheses for each question
+
+These steps make sure the dataset is understandable, cleaned and prepared for exploration so the communication regarding the key results can be done to a broad audience.
+
+### Matching provided data with posed questions
+
+The provided datasets are suitable for conducting statistical analysis to explore the influence of different variables on an increase in virus particles and, consequently, in the dynamics of disease spread and determine if these influences are statistically significant. 
+
+For constructing a linear regression model in line with the research questions, it's vital to select a dependent variable (the outcome) and one or more independent variables (predictors). Mathematically, this is expressed as Y = a + bX, where Y is the dependent variable, X the predictor, a the y-intercept, and b the slope linked to the predictor variable.
+
+#### Does greater density of population correlate with higher amount of measured SARS-CoV-2 RNA particles at the given area?
+
+Since the virus is airborne, it is logical to assume that the dynamics of its spread are related to population density. Thus, the higher the population density in a certain area, the theoretically higher should be the values of SARS-CoV-2 particles in wastewater as measured over time.
+
+In order to answer this question, we aggregate information on measured virus particle values and population density and then use statistical tests to test the relationship between the average number of virus particles in a region and the average density of its population.
+
+- Outcome variable is defined as mean RNA flow over multiple regions over observed period of time.
+
+- Predictor variable is defined as mean population density over multiple regions over observed period of time.
+
+#### Whether relative number of observed increase in RNA particles has seasonal behaviour?
+
+Airborne diseases often show a seasonal pattern due to a combination of factors: environmental conditions like cold, dry air aiding virus stability; increased indoor crowding in colder seasons leading to easier disease transmission; variations in immune system strength influenced by changes in weather and sunlight; and behavioral changes, such as school seasons, affecting how people congregate. Therefore, it is fair to assume that SARS-CoV-2 also has seasonal patterns of distribution.
+
+To investigate this question, we will sort the dataset so that we can label each successive week with a logical variable that reflects the fact of an increase in virus particle counts for each region. Then, we will group the observations by year and week and calculate the number of such increases in RNA flow and the ratio of this number to the total number of observations for all regions for a particular week in a particular year. Finally, we add comparable week numbers to the seasons of the year and calculate the standard deviation (spread) of such cases of RNA flow increase within each season over the observable period.
+
+- Outcome variable is defined as spread of RNA flow increase cases across all regions.
+
+- Predictor variable is defined as season labbel which groups sequence week numbers.
+
 ## Description of the data used
 <!-- Which data/variables were recorded/used for the study, something about any missing values, a graphical representation and summary statistics. Please note that this is about providing insight into the data used, not yet about (the method used for) answering the research questions -->
 
@@ -65,6 +106,7 @@ This file contains the average number of SARS-CoV-2 virus particles per 100,000 
 |Region_code|MunicipalityCode|Code of the municipality|
 |Region_name|MunicipalityName|Name of the municipality|
 |RNA_flow_per_100000_weeklymean|RNA_flow|Number of SARS-CoV-2 RNA particles measured in the sewage, based on a weighted average per 100,000 inhabitants|
+Table 1. Sewer dataset description
 
 #### Municipalities
 
@@ -78,6 +120,7 @@ This file contains information about each municipality's assignment to a provinc
 |ProvincialCode|-|Code of the province|
 |ProvincialCodePV|-|Province Administrative classification|
 |ProvincialName|-|Name of the province|
+Table 2. Municipalities dataset description
 
 #### Population density
 
@@ -89,6 +132,7 @@ This file contains population and population density information for each munici
 |Regio's|MunicipalName|Name of the municipality|
 |Bevolking/Bevolkingssamenstelling op 1 januari/Totale bevolking (ntal)|Population|Total number of inhabitants on Jan. 1|
 |Bevolking/Bevolkingssamenstelling op 1 januari/Bevolkingsdichtheid (aantal inwoners per km²)|PopulationDensity|Density of inhabitants per km²|
+Table 3. Population dataset description
 
 #### Cleaning and combining datasets
 
@@ -108,6 +152,7 @@ Region_code       356       0
 MunicipalName     356       0
 RNA_flow        51600     918
 ```
+Snippet 1. Unique and missing values in sewer dataframe
 
 There are 918 missing values of **RNA_flow** feature so these observations are removed from dataset.
 
@@ -120,6 +165,7 @@ MunicipalName        727       0
 Population          1388    1514
 PopulationDensity    889    1514
 ```
+Snippet 2. Unique and missing values in population dataframe
 
 Respectively, there are 1514 missing values of **Population** and **PopulationDensity** so these observations are subject for removal.
 
@@ -143,6 +189,7 @@ $ MunicipalName  <chr> "'s-Gravenhage", "'s-Hertogenbosch", "Aa en Hunze", "Aals
 $ RNA_flow       <dbl> 166.932, 59.388, 7.452, 139.167, 19.150, 3.202, 50.272, 150.267, 26.486~
 $ ProvincialName <chr> "Zuid-Holland", "Noord-Brabant", "Drenthe", "Noord-Holland", "Gelderlan~
 ```
+Snippet 3. Structure of sewer dataframe
 
 **Population dataframe**
 
@@ -155,6 +202,7 @@ $ Population        <int> 155111, 25445, 31859, 27121, 27843, 20165, 25590, 1094
 $ PopulationDensity <int> 1410, 92, 1584, 281, 272, 2297, 1180, 991, 1087, 1640, 110, 886, 279~
 $ ProvincialName    <chr> "Noord-Brabant", "Drenthe", "Noord-Holland", "Gelderland", "FryslÃ¢n~
 ```
+Snippet 4. Structure of population dataframe
 
 Detalied steps for data preparation and clearing are in project script.
 
