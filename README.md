@@ -206,9 +206,55 @@ Snippet 4. Structure of population dataframe
 
 Detalied steps for data preparation and clearing are in project script.
 
-### Data summary statistics
+### Exploring data summary 
 
-TODO
+To begin with exploration, first we will take a look on how many municipalities each province have.
+
+![Provinces summmary](./images/01-1-province-summary.png)
+Graph 1. Number of municipalities number in each province
+
+Next we will take a look at how population summary corresponds to population density.
+
+![Population vs. Density](./images/01-2-population-vs-density.png)
+Graph 2. Population size vs. density
+
+Here we can notice that there is a cluster of data points at the lower end of both axes, indicating that many areas have small populations and low population density. As the population size increases, the population density does not necessarily increase proportionally. This suggests that larger populations are spread over larger areas in some cases.
+
+There are outliers with high population density and smaller population size, as well as areas with large populations and comparatively lower density. The lack of a clear, strong pattern might indicate a complex relationship between the size of a population and how densely it is distributed, potentially influenced by geographical and socio-economic factors.
+
+Next we will visualize the distribution of population sizes across provinces (cutting down outliers with population more than 250,000). 
+
+![Summary for population sizes for provinces](./images/01-3-population-boxplot.png)
+Graph 3. Summary for population sizes for provinces
+
+The median population size varies between provinces, with some having higher medians, indicating larger central tendencies of population. Provinces like Noord-Holland and Zuid-Holland show wider interquartile ranges, suggesting more variability in municipality sizes.
+
+Several provinces exhibit outliers, suggesting the presence of municipalities with populations significantly different from others within the same province. The differences in box heights and positions across provinces suggest disparities in population distributions across municipalities.
+
+We also would like to summarize distribution of population density across provinces the same way.
+
+![Summary for population density for provinces](./images/01-4-boxplot-density.png)
+Graph 4. Summary for population density for provinces
+
+There's a wide range in population density among provinces, with some provinces having significantly higher median population densities than others. Zuid-Holland stands out with a much higher median and variation in population density, suggesting it has more urbanized areas compared to other provinces.
+
+Most provinces have outliers indicating municipalities with extremely high population density compared to their respective provincial medians. The spread of the boxes and whiskers shows that the distribution of population density is not uniform across provinces, reflecting differences in urbanization, geography, and settlement patterns.
+
+It can be concluded that provinces with larger populations do not necessarily have higher densities. For example, while Zuid-Holland has a high population density, its population size is not proportionally larger than some other provinces. This suggests that factors other than sheer population numbers, such as geographical size and urban planning, significantly influence population density. Provinces with high variability in population size do not always show the same variability in density, indicating that some less populated areas can be quite densely populated, likely due to urbanization.
+
+In addition we would like also plot a histogram with general population distribution across municipalities.
+
+![Histogram for population distribution](./images/01-5-population-distribution.png)
+Graph 5. Histogram for population distribution
+
+It shows that the majority of municipalities have relatively small populations, with a sharp peak at the lower end of the population range. This indicates that smaller municipalities are more common than larger ones. The distribution is right-skewed, with fewer municipalities having very large populations, as seen in the long tail stretching to the right. This suggests a pattern where a few municipalities have large populations while the vast majority have smaller populations.
+
+Finally we would like to depict the trend of SARS-CoV-2 RNA particles measured in sewage over time.
+
+![RNA flow measurments over time](./images/01-6-rna-trend.png)
+Graph 6. RNA flow measurments over time
+
+It shows clear fluctuations in concentration levels, with multiple peaks suggesting waves or surges in COVID-19 cases. The x-axis indicates the time in year-week format, revealing periods with increased RNA particle counts which may correspond to outbreaks or increases in infection rates. The sharp rise towards the right end of the graph could indicate a recent and significant surge, possibly due to a new variant or reduced adherence to public health measures. 
 
 ## Results of the data analysis
 <!-- Results of the data analysis: The actual answer of the research questions based on data analysis, the use of specific graphs to gain insight into the answers to the questions and the results of the hypothesis testing -->
