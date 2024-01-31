@@ -162,24 +162,6 @@ yearly_slice %>% ggplot(aes(x = PopulationDensity, y = RNA_flow)) +
 
 ###################### Question 2
 
-# Adding week number and year to each public holiday
-public_holidays$Week <- lubridate::week(dmy(public_holidays$Date))
-public_holidays$Year <- lubridate::year(dmy(public_holidays$Date))
-
-# Making a distinct list of week-year pairs
-public_holidays_distinct <- distinct(public_holidays, Week, Year, .keep_all = TRUE)
-public_holidays_distinct$Date <- NULL
-
-# Exploring holidays distribution over the weeks
-public_holidays %>% ggplot(aes(x = Week, y = Year)) +
-  geom_jitter(alpha = 0.5)
-
-# Clustering spring holidays
-Q <- quantile(public_holidays$Week, probs=c(.25, .75), na.rm = FALSE)
-iqr <- IQR(public_holidays$Week)
-spring_holidays <- subset(public_holidays, public_holidays$Week > (Q[1] - 1.5*iqr) & public_holidays$Week < (Q[2]+1.5*iqr))
-
-
 # Order sewer data by municipality, year and week
 sewer_ordered <- sewerdata[with(sewerdata, order(MunicipalName, Year, Week)), ]
 
@@ -188,61 +170,95 @@ sewer_ordered$delta <- with(sewer_ordered,
                             ifelse(MunicipalName == lag(MunicipalName), 
                                    RNA_flow - lag(RNA_flow), NA))
 
-# Grouping sewer RNA flow by weeks and summing up deltas across all municipalities
-weekly_group <- sewer_ordered %>% filter(Year > 2020) %>% 
-  group_by(Week) %>%
-  summarise(obs = n(),
-            mean_RNA = mean(RNA_flow), 
-            max_RNA = max(RNA_flow),
-            min_RNA = min(RNA_flow),
-            sum_delta = sum(delta)) %>%
-  arrange(desc(mean_RNA))
+# Marking whether RNA flow was increased comparing to previous week
+sewer_ordered$IncreaseRNA <- with(sewer_ordered,
+                                  ifelse(MunicipalName == lag(MunicipalName), 
+                                         ifelse(RNA_flow > lag(RNA_flow), TRUE, FALSE), NA))
 
-# Plotting delta sum of RNA flow throughout the weeks 
-weekly_group %>% ggplot(aes(x = Week, y = sum_delta)) +
+# Grouping sewer RNA flow by year-weeks, summing up observations of RNA flow increase across municipalities
+weekly_group <- sewer_ordered %>% drop_na(IncreaseRNA)  %>% 
+  group_by(Year, Week) %>%
+  summarise(inc = sum(IncreaseRNA),            # amount of observations when RNA flow increased comparing with previous week
+            obs = n(),                         # amount of observations for year-week pair
+            percent = sum(IncreaseRNA) / n(),  # percent of increase observations vs total for year-week
+            sd = sd(IncreaseRNA)) %>%          # spread of observed increase across municipalities
+  arrange(desc(obs))
+
+# Shifting rightmost weeks to the left from the 0 to make clear plot for seasons
+weekly_group$Week <- with(weekly_group, ifelse(Week %in% 52:53, -1, 
+                                                 ifelse(Week == 51, -2, 
+                                                        ifelse(Week == 50, -3, ifelse(Week == 49, -4, Week)))))
+# Shifted to the left weeks assigned to the next year
+weekly_group$Year <- with(weekly_group, ifelse(Week < 0, Year + 1, Year))
+
+# Assigning seasons to weeks 
+weekly_group$season <- with(weekly_group, ifelse(Week %in% 10:22, "Spring", 
+                                              ifelse(Week %in% 23:35, "Summer", 
+                                                  ifelse(Week %in% 36:48, "Fall", "Winter"))))
+weekly_group$season_num <- with(weekly_group, ifelse(Week %in% 10:22, 02, 
+                                                 ifelse(Week %in% 23:35, 03, 
+                                                        ifelse(Week %in% 36:48, 04, 01))))
+
+# Plotting percentage of RNA flow increase throughout the weeks in year facets
+weekly_group %>%  ggplot(aes(x = Week, y = percent)) +
   geom_jitter(alpha = 0.5) +
   labs(x = "Week number", 
-       y = "Mean RNA flow",
-       title = "Relation of delta RNA flow sum to weeks during the year") +
-  geom_vline(data = spring_holidays, aes(xintercept = Week), linetype="dotted", color = "blue") +
-  geom_smooth(method = "lm", se = FALSE)
-
-# Sub-setting a spring slice of and summing up deltas across all municipalities
-spring_slice <- sewer_ordered %>% subset(Week %in% spring_holidays$Week) %>%
-  group_by(Week) %>%
-  summarise(obs = n(),
-            mean_RNA = mean(RNA_flow), 
-            max_RNA = max(RNA_flow),
-            min_RNA = min(RNA_flow),
-            sum_delta = sum(delta)) %>%
-  arrange(desc(mean_RNA))
-
-# Plotting delta sum of RNA flow throughout the spring slice 
-spring_slice %>% ggplot(aes(x = Week, y = sum_delta)) +
-  geom_jitter(alpha = 0.5) +
+       y = "Observed increase in RNA flow (percentage)",
+       title = "Increase of RNA flow observed on weeks during the year (faceted)") +
+  facet_wrap(vars(Year), nrow = 5) +
+  geom_vline(xintercept = 10, linetype="dotted", color = "blue") +
+  geom_vline(xintercept = 23, linetype="dotted", color = "blue") +
+  geom_vline(xintercept = 36, linetype="dotted", color = "blue") +
+  geom_vline(xintercept = 49, linetype="dotted", color = "blue")
+  
+# Plotting percentage of RNA flow increase throughout the weeks in flat graph
+weekly_group %>% group_by(Week) %>% ggplot(aes(x = Week, y = percent, color=Year)) +
+  geom_point() +
   labs(x = "Week number", 
-       y = "Mean RNA flow",
-       title = "Relation of delta RNA flow sum to weeks during the year") +
+       y = "Observed increase in RNA flow (percentage)",
+       title = "Increase of RNA flow observed on weeks during the year (flat)") +
+  geom_vline(xintercept = 10, linetype="dotted", color = "blue") +
+  geom_vline(xintercept = 23, linetype="dotted", color = "blue") +
+  geom_vline(xintercept = 36, linetype="dotted", color = "blue") +
+  geom_vline(xintercept = 49, linetype="dotted", color = "blue") +
   geom_smooth(method = "lm", se = FALSE)
+
+# Plotting percentage of RNA flow increase throughout the seasons
+weekly_group %>% ggplot(aes(x = Week, y = percent, color=Year)) + 
+  geom_point() +
+  labs(x = "Week number", 
+       y = "Observed increase in RNA flow (percentage)",
+       title = "Increase of RNA flow observed (seasonal correlation)") +
+  geom_smooth(aes(group=season), method="lm", show.legend = TRUE) +
+  geom_vline(xintercept = 10, linetype="dotted", color = "blue") +
+  geom_vline(xintercept = 23, linetype="dotted", color = "blue") +
+  geom_vline(xintercept = 36, linetype="dotted", color = "blue") +
+  geom_vline(xintercept = 49, linetype="dotted", color = "blue") 
+
+# Plotting spread of RNA flow increase percentage over seasons
+weekly_group %>% ggplot(aes(x = season, y = percent, color=Year)) + 
+  geom_point() +
+  labs(x = "Season", 
+       y = "Observed increase in RNA flow (spread)",
+       title = "Spread of RNA flow increase observed") 
 
 
 # Fit regression model
-model_02 <- lm(sum_delta ~ Week, data = spring_slice)
+model_02 <- lm(sd ~ season_num, data = weekly_group)
 
 # Get regression table
 get_regression_table(model_02)
 
 # Making null distribution
-null_dist_02 <- spring_slice %>% 
-  specify(formula = sum_delta ~ Week) %>% 
+null_dist_02 <- weekly_group %>% 
+  specify(formula = sd ~ season_num) %>% 
   hypothesize(null = "independence") %>% 
   generate(reps = 1000, type = "permute") %>% 
   calculate(stat = "correlation")
 
-
 # Observation difference proportion
-obp_02  <- spring_slice %>% 
-  specify(formula = sum_delta ~ Week) %>%
+obp_02  <- weekly_group %>% 
+  specify(formula = sd ~ season_num) %>%
   calculate(stat = "correlation")
 
 # Visualizing null distribution
