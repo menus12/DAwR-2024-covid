@@ -9,17 +9,16 @@ library(dplyr)
 library(moderndive)
 library(infer)
 library(lubridate)
+options(scipen = 999)
 
 # Loading data files 
 sewerdata <- read.csv2('Datafiles/COVID-19_SewerWaterData_MunicipalitiesWeek.csv')
 municipalities <- read.csv2('Datafiles/municipalities_alphabetically_2022.csv')
 population_density <- read.csv2('Datafiles/Regionale_kerncijfers_Nederland_23012024_192144.csv')
-public_holidays <- read.csv2('Datafiles/public_holidays.csv')
 
 # Adjusting column names
 names(sewerdata)[8:9] <- c("MunicipalName","RNA_flow")
 colnames(population_density) <- c("Year", "MunicipalName", "Population", "PopulationDensity")
-names(public_holidays)[1] <- "PublicHoliday"
 
 # #################### Clearing and adjusting dataframes
 
@@ -61,14 +60,58 @@ population_density <- population_density[with(population_density, order(Year, Mu
 
 # #################### Exploration of summary statistics
 
-# Understanding number of municipalities number in each province
+# Counting number of municipalities number in each province
 mun_per_province <- municipalities %>% 
   group_by(ProvincialName) %>% 
   summarise(count = n()) %>% 
   arrange(desc(count)) 
 mun_per_province
 
-# TODO
+# Plotting number of municipalities number in each province
+mun_per_province %>% ggplot(aes(x = ProvincialName, y = count)) +
+  geom_col() +
+  labs(x = "Province", 
+       y = "Number of municipalities",
+       title = "Number of municipalities in each province")
+
+# Scatterplot for population size vs. density
+population_density %>% ggplot(aes(x = Population, y = PopulationDensity)) + 
+  geom_point() +
+  labs(x = "Population size", 
+       y = "Population density",
+       title = "Population size vs population density")
+
+# Boxplotting population across provinces without outliers
+population_density %>% filter(Population < 250000) %>% ggplot(aes(x = factor(ProvincialName), y = Population)) +
+  geom_boxplot() + 
+  labs(x = "Province", 
+       y = "Population size",
+       title = "Population size summary")
+
+# Boxplotting population density across provinces without outliers
+population_density %>% filter(Population < 250000) %>% ggplot(aes(x = factor(ProvincialName), y = PopulationDensity)) +
+  geom_boxplot() + 
+  labs(x = "Province", 
+       y = "Population density",
+       title = "Population density summary")
+
+# Plotting population distribution
+population_density %>% filter(Population < 250000) %>% ggplot(aes(x = Population)) + 
+  geom_histogram(bins = 30) +
+  labs(x = "Population", 
+       y = "Number of observations",
+       title = "Population distribution")
+
+
+# Plotting overall trend of RNA flow count across all municipalities
+sewerdata %>% group_by(Year, Week) %>% summarise(total_rna = sum(RNA_flow)) %>% 
+  ggplot(aes(x = interaction(Year, Week, sep = "-", lex.order = TRUE), y = total_rna)) + 
+  geom_col() +
+  labs(x = "Year-Week", 
+       y = "Cumulative RNA flow",
+       title = "Trend of RNA Flow over time") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
 
 # #################### Results of the data analysis
 
