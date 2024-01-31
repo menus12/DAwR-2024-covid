@@ -18,10 +18,10 @@ The data analysis in this study will be done through the testing of two hypothes
     - null hypothesis: weekly mean of RNA flow has no correlation with population density
     - alternative hypothesis: weekly mean of RNA flow has positive correlation with population density
 
-2. Amount of measured SARS-CoV-2 RNA particles is increasing after public holidays
+2. Amount of measured SARS-CoV-2 RNA particles is increasing during specific seasons
 
-    - null hypothesis: weekly mean of RNA flow is not increasing after public holidays
-    - alternative hypothesis: weekly mean of RNA flow is not increasing after public holidays
+    - null hypothesis: amount of RNA flow increase observations spread (standard deviation) is not dependent on year season
+    - alternative hypothesis: amount of RNA flow increase observations spread (standard deviation) is dependent on year season
 
 ## Operationalization of the research questions
 <!-- Describe the data that will be used and how the questions will be answered on the basis of this data. The data analysis itself is not yet described here. So do tell ‘Data file [X] comes from [Y] and can answer the posed questions because [Z]’, but do not yet describe the data itself -->
@@ -235,6 +235,54 @@ In this plot, vertical line represent roughly 29.26% of observed correlation ass
 In other words, we see that the value of the correlation between the mean RNA flow amount and the mean density of municipalities, which we obtained, does not fit the hypothetical null distribution, where the mean RNA flow amount does not correlate with the mean population density in municipalities. Therefore, we are inclined to reject H0 and accept the alternative hypotesis the mean population density indeed have a positive correlation with mean RNA flow amount according to Wastewater Surveillance program.
 
 ### Relation of RNA flow amount dynamics during public hoolidays 
+
+First we have to set borders for seasons for clarity:
+
+|Season|Start week|End week|
+|---|---|---|
+|Winter|49|09|
+|Sring|10|22|
+|Summer|23|35|
+|Fall|36|48|
+
+In order to add more clarity to plots, last winter weeks of the year were shifted leftward from zero and assigned to the next year, so that e.g. weeks 52, 51, 50 and 49 of 2020 became weeks -1, -2, -3 and -4 of 2021 respectively, etc.
+
+Additionaly we went over sewer data set and added `IncreaseRNA` feature which shows whether there was an increase in RNA flow comparing with previous week (for each municipality).
+
+Next we would like to plot a percentage of increase observations (devided by total number of observations for each week) for each week faceted by each year to spot any seasonal pattern in RNA increase.
+
+![Percentage of RNA flow increase throughout the weeks (faceted)](./images/05-year-facet.png)
+
+From the plot it's not evident that there is a specific seasonal pattern. So next we will flatten these facets and apply liniar model to have an idea of overall correlation of increase cases throughout the year.
+
+![Percentage of RNA flow increase throughout the weeks (flat)](./images/06-years-flat.png)
+
+Form this plot it's also not evident that there is any strong correlation over the whole year, so next we will explore a linear model for each season.
+
+![Percentage of RNA flow increase throughout the weeks (flat)](./images/07-season-linear.png)
+
+Linear model for each season also shows either no or slighly negative correlation. We can flatten this graph even more to see that there is a significant spread of increase cases inside each season during observation years.
+
+![Percentage of RNA flow increase throughout the weeks (flat)](./images/08-season-flat.png)
+
+Next we will build regression table, to see how spread of increse cases (standard deviation) depends on season.
+
+```R
+ term       estimate std_error statistic p_value lower_ci upper_ci
+  <chr>         <dbl>     <dbl>     <dbl>   <dbl>    <dbl>    <dbl>
+1 intercept     0.435     0.011     38.2    0        0.413    0.458
+2 season_num    0.005     0.004      1.19   0.236   -0.003    0.013
+```
+
+Table suggests that for each next season there will be roughly 0,5% more spread of increase cases on avarage across all municipalities.
+
+Then we make a null distibution to see how current observations fit into the Null Hypothesis:
+
+![Percentage of RNA flow increase throughout the weeks (flat)](./images/09-null-distribution.png)
+
+In this plot, vertical line represent observed correlation of 0.0911 assuming the null hypothesis H0 is true.
+
+In other words, observed value is somewhat fit the null distribution and therefore we can say that spread of increase cases of RNA flow is not significantly depends on year season. Therefore, we are inclined to accept H0 and reject the alternative hypotesis that increase of RNA flow has low spread during specific season.
 
 ## Conclusions and recommendations
 <!-- including recommendations for further research -->
