@@ -2,7 +2,7 @@
 1680;GM1680;Aa en Hunze;22;PV22;Drenthe
 358;GM0358;Aalsmeer;27;PV27;Noord-Holland
 197;GM0197;Aalten;25;PV25;Gelderland
-59;GM0059;Achtkarspelen;21;PV21;Fryslân
+59;GM0059;Achtkarspelen;21;PV21;Fryslan
 482;GM0482;Alblasserdam;28;PV28;Zuid-Holland
 613;GM0613;Albrandswaard;28;PV28;Zuid-Holland
 361;GM0361;Alkmaar;27;PV27;Noord-Holland
@@ -11,7 +11,7 @@
 484;GM0484;Alphen aan den Rijn;28;PV28;Zuid-Holland
 1723;GM1723;Alphen-Chaam;30;PV30;Noord-Brabant
 1959;GM1959;Altena;30;PV30;Noord-Brabant
-60;GM0060;Ameland;21;PV21;Fryslân
+60;GM0060;Ameland;21;PV21;Fryslan
 307;GM0307;Amersfoort;26;PV26;Utrecht
 362;GM0362;Amstelveen;27;PV27;Noord-Holland
 363;GM0363;Amsterdam;27;PV27;Noord-Holland
@@ -60,7 +60,7 @@
 1706;GM1706;Cranendonck;30;PV30;Noord-Brabant
 216;GM0216;Culemborg;25;PV25;Gelderland
 148;GM0148;Dalfsen;23;PV23;Overijssel
-1891;GM1891;Dantumadiel;21;PV21;Fryslân
+1891;GM1891;Dantumadiel;21;PV21;Fryslan
 503;GM0503;Delft;28;PV28;Zuid-Holland
 762;GM0762;Deurne;30;PV30;Noord-Brabant
 150;GM0150;Deventer;23;PV23;Overijssel
@@ -91,7 +91,7 @@
 232;GM0232;Epe;25;PV25;Gelderland
 233;GM0233;Ermelo;25;PV25;Gelderland
 777;GM0777;Etten-Leur;30;PV30;Noord-Brabant
-1940;GM1940;De Fryske Marren;21;PV21;Fryslân
+1940;GM1940;De Fryske Marren;21;PV21;Fryslan
 779;GM0779;Geertruidenberg;30;PV30;Noord-Brabant
 1771;GM1771;Geldrop-Mierlo;30;PV30;Noord-Brabant
 1652;GM1652;Gemert-Bakel;30;PV30;Noord-Brabant
@@ -113,12 +113,12 @@
 160;GM0160;Hardenberg;23;PV23;Overijssel
 243;GM0243;Harderwijk;25;PV25;Gelderland
 523;GM0523;Hardinxveld-Giessendam;28;PV28;Zuid-Holland
-72;GM0072;Harlingen;21;PV21;Fryslân
+72;GM0072;Harlingen;21;PV21;Fryslan
 244;GM0244;Hattem;25;PV25;Gelderland
 396;GM0396;Heemskerk;27;PV27;Noord-Holland
 397;GM0397;Heemstede;27;PV27;Noord-Holland
 246;GM0246;Heerde;25;PV25;Gelderland
-74;GM0074;Heerenveen;21;PV21;Fryslân
+74;GM0074;Heerenveen;21;PV21;Fryslan
 917;GM0917;Heerlen;31;PV31;Limburg
 1658;GM1658;Heeze-Leende;30;PV30;Noord-Brabant
 399;GM0399;Heiloo;27;PV27;Noord-Holland
@@ -159,7 +159,7 @@
 415;GM0415;Landsmeer;27;PV27;Noord-Holland
 1621;GM1621;Lansingerland;28;PV28;Zuid-Holland
 417;GM0417;Laren;27;PV27;Noord-Holland
-80;GM0080;Leeuwarden;21;PV21;Fryslân
+80;GM0080;Leeuwarden;21;PV21;Fryslan
 546;GM0546;Leiden;28;PV28;Zuid-Holland
 547;GM0547;Leiderdorp;28;PV28;Zuid-Holland
 1916;GM1916;Leidschendam-Voorburg;28;PV28;Zuid-Holland
@@ -197,7 +197,7 @@
 267;GM0267;Nijkerk;25;PV25;Gelderland
 268;GM0268;Nijmegen;25;PV25;Gelderland
 1930;GM1930;Nissewaard;28;PV28;Zuid-Holland
-1970;GM1970;Noardeast-Fryslân;21;PV21;Fryslân
+1970;GM1970;Noardeast-Fryslan;21;PV21;Fryslan
 1695;GM1695;Noord-Beveland;29;PV29;Zeeland
 1699;GM1699;Noordenveld;22;PV22;Drenthe
 171;GM0171;Noordoostpolder;24;PV24;Flevoland
@@ -214,10 +214,10 @@
 175;GM0175;Ommen;23;PV23;Overijssel
 1586;GM1586;Oost Gelre;25;PV25;Gelderland
 826;GM0826;Oosterhout;30;PV30;Noord-Brabant
-85;GM0085;Ooststellingwerf;21;PV21;Fryslân
+85;GM0085;Ooststellingwerf;21;PV21;Fryslan
 431;GM0431;Oostzaan;27;PV27;Noord-Holland
 432;GM0432;Opmeer;27;PV27;Noord-Holland
-86;GM0086;Opsterland;21;PV21;Fryslân
+86;GM0086;Opsterland;21;PV21;Fryslan
 828;GM0828;Oss;30;PV30;Noord-Brabant
 1509;GM1509;Oude IJsselstreek;25;PV25;Gelderland
 437;GM0437;Ouder-Amstel;27;PV27;Noord-Holland
@@ -249,14 +249,14 @@
 441;GM0441;Schagen;27;PV27;Noord-Holland
 279;GM0279;Scherpenzeel;25;PV25;Gelderland
 606;GM0606;Schiedam;28;PV28;Zuid-Holland
-88;GM0088;Schiermonnikoog;21;PV21;Fryslân
+88;GM0088;Schiermonnikoog;21;PV21;Fryslan
 1676;GM1676;Schouwen-Duiveland;29;PV29;Zeeland
 965;GM0965;Simpelveld;31;PV31;Limburg
 845;GM0845;Sint-Michielsgestel;30;PV30;Noord-Brabant
 1883;GM1883;Sittard-Geleen;31;PV31;Limburg
 610;GM0610;Sliedrecht;28;PV28;Zuid-Holland
 1714;GM1714;Sluis;29;PV29;Zeeland
-90;GM0090;Smallingerland;21;PV21;Fryslân
+90;GM0090;Smallingerland;21;PV21;Fryslan
 342;GM0342;Soest;26;PV26;Utrecht
 847;GM0847;Someren;30;PV30;Noord-Brabant
 848;GM0848;Son en Breugel;30;PV30;Noord-Brabant
@@ -267,9 +267,9 @@
 1708;GM1708;Steenwijkerland;23;PV23;Overijssel
 971;GM0971;Stein;31;PV31;Limburg
 1904;GM1904;Stichtse Vecht;26;PV26;Utrecht
-1900;GM1900;Súdwest-Fryslân;21;PV21;Fryslân
+1900;GM1900;Súdwest-Fryslan;21;PV21;Fryslan
 715;GM0715;Terneuzen;29;PV29;Zeeland
-93;GM0093;Terschelling;21;PV21;Fryslân
+93;GM0093;Terschelling;21;PV21;Fryslan
 448;GM0448;Texel;27;PV27;Noord-Holland
 1525;GM1525;Teylingen;28;PV28;Zuid-Holland
 716;GM0716;Tholen;29;PV29;Zeeland
@@ -278,7 +278,7 @@
 183;GM0183;Tubbergen;23;PV23;Overijssel
 1700;GM1700;Twenterand;23;PV23;Overijssel
 1730;GM1730;Tynaarlo;22;PV22;Drenthe
-737;GM0737;Tytsjerksteradiel;21;PV21;Fryslân
+737;GM0737;Tytsjerksteradiel;21;PV21;Fryslan
 450;GM0450;Uitgeest;27;PV27;Noord-Holland
 451;GM0451;Uithoorn;27;PV27;Noord-Holland
 184;GM0184;Urk;24;PV24;Flevoland
@@ -296,13 +296,13 @@
 984;GM0984;Venray;31;PV31;Limburg
 1961;GM1961;Vijfheerenlanden;26;PV26;Utrecht
 622;GM0622;Vlaardingen;28;PV28;Zuid-Holland
-96;GM0096;Vlieland;21;PV21;Fryslân
+96;GM0096;Vlieland;21;PV21;Fryslan
 718;GM0718;Vlissingen;29;PV29;Zeeland
 986;GM0986;Voerendaal;31;PV31;Limburg
 626;GM0626;Voorschoten;28;PV28;Zuid-Holland
 285;GM0285;Voorst;25;PV25;Gelderland
 865;GM0865;Vught;30;PV30;Noord-Brabant
-1949;GM1949;Waadhoeke;21;PV21;Fryslân
+1949;GM1949;Waadhoeke;21;PV21;Fryslan
 866;GM0866;Waalre;30;PV30;Noord-Brabant
 867;GM0867;Waalwijk;30;PV30;Noord-Brabant
 627;GM0627;Waddinxveen;28;PV28;Zuid-Holland
@@ -318,7 +318,7 @@
 293;GM0293;Westervoort;25;PV25;Gelderland
 1950;GM1950;Westerwolde;20;PV20;Groningen
 1783;GM1783;Westland;28;PV28;Zuid-Holland
-98;GM0098;Weststellingwerf;21;PV21;Fryslân
+98;GM0098;Weststellingwerf;21;PV21;Fryslan
 614;GM0614;Westvoorne;28;PV28;Zuid-Holland
 189;GM0189;Wierden;23;PV23;Overijssel
 296;GM0296;Wijchen;25;PV25;Gelderland
