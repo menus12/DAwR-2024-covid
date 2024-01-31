@@ -1,6 +1,17 @@
 ## Preface
 <!-- Optional, the preface is not about the subject -->
 
+An analysis of Covid-19 Netherlands National SARS-CoV-2 Wastewater Surveillance data 
+
+By Itzel Ruiz
+
+A Research Paper
+Submitted to the lecturer of the subject ‘Programming with R’
+The Hague University of Applied Sciences PRO
+Master of Business Administration
+MBA Big Data Analytics
+January 2024
+
 ## Abstract
 <!-- Contains the purpose of the research carried out, the research questions that are dealt with, the research method and the most important findings -->
 
