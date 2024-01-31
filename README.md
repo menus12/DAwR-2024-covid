@@ -399,4 +399,10 @@ In other words, observed value is somewhat fit the null distribution and therefo
 ## Conclusions and recommendations
 <!-- including recommendations for further research -->
 
-## Appendix 1. 
+The current research findings suggested a positive correlation between RNA flow in wastewater and population density, disproving the null hypothesis. However, no significant seasonal trend was observed in the spread of RNA flow, leading to acceptance of the null hypothesis for seasonal variation.
+
+Nevertheless it's worth to notice the significant difference in agility of measurments of RNA flow and population density per municipality. Population size and density information is available as of 1st January oe each year, but it's clear that at a given point in time (a given week of RNA flow measurments) size and density of population may vary, so the current calculations of correlation may have a significant margin of error.
+
+To conclude we point to the importance of monitoring densely populated areas more closely as they have a higher likelihood of disease spread. The lack of a clear seasonal pattern suggests that external factors, perhaps social behavior or interventions, could play a more significant role than natural seasonality in the spread.
+
+For further research, it's recommended to investigate the socio-behavioral factors influencing the spread in densely populated areas and to explore other environmental or biological variables that could affect the seasonality of virus transmission. Additionally, it worth to consider other measurment tools for population size and density to provide more agile information when of fluctuation of these amounts.
