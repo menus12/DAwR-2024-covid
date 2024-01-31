@@ -16,6 +16,10 @@ January 2024
 ## Abstract
 <!-- Contains the purpose of the research carried out, the research questions that are dealt with, the research method and the most important findings -->
 
+This study aimed to analyze the 'Covid-19 National SARS-CoV-2 Wastewater Surveillance' data in the Netherlands from September 2020 to December 2023 to enhance public health strategies against COVID-19. The research revolved around two hypotheses: firstly, whether a higher population density correlates with an increased amount of SARS-CoV-2 RNA particles, and secondly, if there is a seasonal pattern in the RNA particles detected in wastewater. 
+
+Using linear regression models to test these hypotheses, the study found a positive correlation between population density and the concentration of virus particles, suggesting that denser populations may experience more significant viral spread. However, no distinct seasonal trends were observed in the viral RNA data. These findings underscore the importance of targeted public health interventions in densely populated regions and suggest further research into factors affecting the seasonality of virus spread.
+
 ## Table of contents
 
 ## Introduction
