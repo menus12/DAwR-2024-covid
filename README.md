@@ -36,7 +36,6 @@ Data provided as three csv files:
 - COVID-19_SewerWaterData_MunicipalitiesWeek.csv with 59,479 observations.
 - municipalities_alphabetically_2022.csv with 345 observations.
 - Regionale_kerncijfers_Nederland_23012024_192144.csv with 2,908 observations
-- public_holidays.csv with 44 observations
 
 Below are descriptions of fields for each data file and indication of the new name (if applicable):
 
@@ -79,15 +78,6 @@ This file contains population and population density information for each munici
 |Regio's|MunicipalName|Name of the municipality|
 |Bevolking/Bevolkingssamenstelling op 1 januari/Totale bevolking (ntal)|Population|Total number of inhabitants on Jan. 1|
 |Bevolking/Bevolkingssamenstelling op 1 januari/Bevolkingsdichtheid (aantal inwoners per km²)|PopulationDensity|Density of inhabitants per km²|
-
-#### Public holidays
-
-This data set was created manually based on information from https://publicholidays.nl/ for 2020-2023. This data will be used to match weeks in sewer data and mark them whether there was a holiday in during this week or no.
-
-|Original name|New name|Comment|
-|---|---|---|
-|PublicHoliday|-|Name of holiday|
-|Date|-|Date of holiday|
 
 #### Cleaning and combining datasets
 
