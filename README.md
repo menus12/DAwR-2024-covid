@@ -22,6 +22,26 @@ Using linear regression models to test these hypotheses, the study found a posit
 
 ## Table of contents
 
+- [Preface](#preface)
+- [Abstract](#abstract)
+- [Table of contents](#table-of-contents)
+- [Introduction](#introduction)
+- [Operationalization of the research questions](#operationalization-of-the-research-questions)
+  * [Matching provided data with posed questions](#matching-provided-data-with-posed-questions)
+- [Description of the data used](#description-of-the-data-used)
+  * [Data sources](#data-sources)
+    + [Sewer water data](#sewer-water-data)
+    + [Municipalities](#municipalities)
+    + [Population density](#population-density)
+    + [Cleaning and combining datasets](#cleaning-and-combining-datasets)
+  * [Exploring data summary](#exploring-data-summary)
+- [Results of the data analysis](#results-of-the-data-analysis)
+  * [Relation of population density and RNA flow amount](#relation-of-population-density-and-rna-flow-amount)
+  * [Relation of RNA flow amount dynamics to seasons](#relation-of-rna-flow-amount-dynamics-to-seasons)
+- [Conclusions and recommendations](#conclusions-and-recommendations)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 ## Introduction
 <!-- An introductory chapter in which the purpose and design of the (sub)study is explained and in which the research questions are described -->
 
