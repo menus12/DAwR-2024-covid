@@ -106,6 +106,7 @@ This file contains the average number of SARS-CoV-2 virus particles per 100,000 
 |Region_code|MunicipalityCode|Code of the municipality|
 |Region_name|MunicipalityName|Name of the municipality|
 |RNA_flow_per_100000_weeklymean|RNA_flow|Number of SARS-CoV-2 RNA particles measured in the sewage, based on a weighted average per 100,000 inhabitants|
+
 Table 1. Sewer dataset description
 
 #### Municipalities
@@ -120,6 +121,7 @@ This file contains information about each municipality's assignment to a provinc
 |ProvincialCode|-|Code of the province|
 |ProvincialCodePV|-|Province Administrative classification|
 |ProvincialName|-|Name of the province|
+
 Table 2. Municipalities dataset description
 
 #### Population density
@@ -132,6 +134,7 @@ This file contains population and population density information for each munici
 |Regio's|MunicipalName|Name of the municipality|
 |Bevolking/Bevolkingssamenstelling op 1 januari/Totale bevolking (ntal)|Population|Total number of inhabitants on Jan. 1|
 |Bevolking/Bevolkingssamenstelling op 1 januari/Bevolkingsdichtheid (aantal inwoners per km²)|PopulationDensity|Density of inhabitants per km²|
+
 Table 3. Population dataset description
 
 #### Cleaning and combining datasets
@@ -200,7 +203,7 @@ $ Year              <int> 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 
 $ MunicipalName     <chr> "'s-Hertogenbosch", "Aa en Hunze", "Aalsmeer", "Aalten", "Achtkarspe~
 $ Population        <int> 155111, 25445, 31859, 27121, 27843, 20165, 25590, 109436, 73107, 211~
 $ PopulationDensity <int> 1410, 92, 1584, 281, 272, 2297, 1180, 991, 1087, 1640, 110, 886, 279~
-$ ProvincialName    <chr> "Noord-Brabant", "Drenthe", "Noord-Holland", "Gelderland", "FryslÃ¢n~
+$ ProvincialName    <chr> "Noord-Brabant", "Drenthe", "Noord-Holland", "Gelderland", "Fryslan~
 ```
 Snippet 4. Structure of population dataframe
 
@@ -261,7 +264,7 @@ It shows clear fluctuations in concentration levels, with multiple peaks suggest
 
 ### Relation of population density and RNA flow amount
 
-First we will group sewer data and population data by each province following by calculationof mean average for RNA flow amounts:
+First we will group sewer data and population data by each province following by calculation of mean average for RNA flow amounts:
 
 ```R
    ProvincialName mean_RNA mean_desity
@@ -270,7 +273,7 @@ First we will group sewer data and population data by each province following by
  2 Zuid-Holland       786.       1965.
  3 Flevoland          778.        664.
  4 Utrecht            755.        881.
- 5 FryslÃ¢n           734.        209.
+ 5 Fryslan           734.        209.
  6 Zeeland            733.        289.
  7 Limburg            711.        690.
  8 Gelderland         692.        595.
@@ -279,12 +282,14 @@ First we will group sewer data and population data by each province following by
 11 Drenthe            599.        267.
 12 Groningen          565.        202
 ```
+Snippet 5. Mean RNA flow and mean density per province
 
 Even relationship between these numbers seems legit, there are couple of provinces with relatively low mean density and high mean amount on RNA flow amount at the same time.
 
 Next, we will make a simple scatterplot to get a better understanding of whether there is a any correlation between mean RNA and mean population density in provinces.
 
 ![Scatterplot mean RNA and density for provinces](./images/02-q1-scatterplot.png)
+Graph 7. Relation between mean RNA flow and mean population density per province
 
 Even the that plot gives an impression of high positive correlation, we would like to zoom in at the municipal level for both mean RNA amount and mean population density.
 
@@ -303,12 +308,14 @@ Even the that plot gives an impression of high positive correlation, we would li
 10 Dijk en Waard       986.      1428. 
 # i 326 more rows
 ```
+Snippet 6. Mean RNA flow and mean density per municipality
 
 Here we can spot some outliers that are municipalities which have low mean population but however have the highest numbers of mean RNA flow amounts.
 
 Nevertheless, on the plot below we can see a relatively positive correlation even with less inclined slope.
 
 ![Scatterplot mean RNA and density for municipalities](./images/03-q1-scatterplot.png)
+Graph 8. Relation between mean RNA flow and mean population density per municipality
 
 Next we will build regression table, based on last aggregate dataframe.
 
@@ -318,12 +325,14 @@ term        estimate std_error statistic p_value lower_ci upper_ci
 1 intercept    685.        9.76      70.3        0  666.     705.   
 2 mean_desity    0.041     0.007      5.59       0    0.027    0.056
 ```
+Snippet 7. Regression table for first hypotesis
 
 Table suggests that for each increase in mean population for municipality, weekly mean of RNA flow amount will be increasing by 41,000 particles per habitant.
 
 Then we make a null distibution to see how current observations fit into the Null Hypothesis:
 
 ![Simulation-based null distribution](./images/04-null-dist.png)
+Graph 9. Null distribution for first hypotesis
 
 In this plot, vertical line represent observed statisic of 0.293 assuming the null hypothesis H0 is true.
 
@@ -340,6 +349,8 @@ First we have to set borders for seasons for clarity:
 |Summer|23|35|
 |Fall|36|48|
 
+Table 4. Mapping of week numbers with seasons
+
 In order to add more clarity to plots, last winter weeks of the year were shifted leftward from zero and assigned to the next year, so that e.g. weeks 52, 51, 50 and 49 of 2020 became weeks -1, -2, -3 and -4 of 2021 respectively, etc.
 
 Additionaly we went over sewer data set and added `IncreaseRNA` feature which shows whether there was an increase in RNA flow comparing with previous week (for each municipality).
@@ -347,18 +358,22 @@ Additionaly we went over sewer data set and added `IncreaseRNA` feature which sh
 Next we would like to plot a percentage of increase observations (devided by total number of observations for each week) for each week faceted by each year to spot any seasonal pattern in RNA increase.
 
 ![Percentage of RNA flow increase throughout the weeks (faceted)](./images/05-year-facet.png)
+Graph 10. Faceted distribution of RNA flow increase ratio
 
 From the plot it's not evident that there is a specific seasonal pattern. So next we will flatten these facets and apply liniar model to have an idea of overall correlation of increase cases throughout the year.
 
 ![Percentage of RNA flow increase throughout the weeks (flat)](./images/06-years-flat.png)
+Graph 11. Flat distribution of RNA flow increase ratio
 
 Form this plot it's also not evident that there is any strong correlation over the whole year, so next we will explore a linear model for each season.
 
-![Percentage of RNA flow increase throughout the weeks (flat)](./images/07-season-linear.png)
+![Percentage of RNA flow increase throughout the weeks (faceted seasons)](./images/07-season-linear.png)
+Graph 12. Flat distribution of RNA flow increase ratio faceted with seasons
 
 Linear model for each season also shows either no or slighly negative correlation. We can flatten this graph even more to see that there is a significant spread of increase cases inside each season during observation years.
 
 ![Percentage of RNA flow increase throughout the weeks (flat)](./images/08-season-flat.png)
+Graph 13. Flat distribution of RNA flow increase ratio
 
 Next we will build regression table, to see how spread of increse cases (standard deviation) depends on season.
 
@@ -368,12 +383,14 @@ Next we will build regression table, to see how spread of increse cases (standar
 1 intercept     0.435     0.011     38.2    0        0.413    0.458
 2 season_num    0.005     0.004      1.19   0.236   -0.003    0.013
 ```
+Snippet 8. Regression table for second hypotesis
 
 Table suggests that for each next season there will be roughly 0,5% more spread of increase cases on avarage across all municipalities.
 
 Then we make a null distibution to see how current observations fit into the Null Hypothesis:
 
 ![Percentage of RNA flow increase throughout the weeks (flat)](./images/09-null-distribution.png)
+Graph 14. Null distribution for second hypotesis
 
 In this plot, vertical line represent observed correlation of 0.0911 assuming the null hypothesis H0 is true.
 
