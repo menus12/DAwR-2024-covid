@@ -1,7 +1,7 @@
 ## Preface
 <!-- Optional, the preface is not about the subject -->
 
-An analysis of Covid-19 Netherlands National SARS-CoV-2 Wastewater Surveillance data 
+An analysis of National SARS-CoV-2 Wastewater Surveillance data 
 
 By Itzel Ruiz
 
